@@ -10,6 +10,7 @@
 package main
 
 import (
+	circlSchemes "circl/sign/schemes"
 	"crypto/ecdsa"
 	"crypto/ed25519"
 	"crypto/elliptic"
@@ -65,7 +66,7 @@ func main() {
 		if *ed25519Key {
 			_, priv, err = ed25519.GenerateKey(rand.Reader)
 		} else if *circlKey != "" {
-			scheme := circlSign.SchemeByName(*circlKey)
+			scheme := circlSchemes.ByName(*circlKey)
 			if scheme == nil {
 				log.Fatalf("No such Circl scheme: %s", scheme)
 			}
