@@ -16,7 +16,6 @@ func TestGroup(t *testing.T) {
 		group.P256,
 		group.P384,
 		group.P521,
-		group.Ristretto255,
 	} {
 		g := g
 		n := g.(fmt.Stringer).String()

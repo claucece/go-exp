@@ -59,10 +59,6 @@ type StateX2 struct {
 // implementation provided in this package.
 func IsEnabledX4() bool { return cpu.X86.HasAVX2 }
 
-// IsEnabledX2 returns true if the architecture supports a two-way SIMD
-// implementation provided in this package.
-func IsEnabledX2() bool { return cpu.ARM64.HasSHA3 }
-
 // Initialize the state and returns the buffer on which the four permutations
 // will act: a uint64 slice of length 100.  The first permutation will act
 // on {a[0], a[4], ..., a[96]}, the second on {a[1], a[5], ..., a[97]}, etc.
@@ -112,11 +108,7 @@ func (s *StateX4) Permute() {
 // Permute performs the two parallel Keccak-f[1600]s interleaved on the slice
 // returned from Initialize().
 func (s *StateX2) Permute() {
-	if IsEnabledX2() {
-		permuteSIMDx2(s.a[s.offset:])
-	} else {
-		permuteScalarX2(s.a[s.offset:]) // A slower generic implementation.
-	}
+	permuteScalarX2(s.a[s.offset:]) // A slower generic implementation.
 }
 
 func permuteScalarX4(a []uint64) {
