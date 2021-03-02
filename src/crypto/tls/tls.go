@@ -26,6 +26,8 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	circlSign "circl/sign"
 )
 
 // Server returns a new TLS server side connection
@@ -355,6 +357,17 @@ func X509KeyPair(certPEMBlock, keyPEMBlock []byte) (Certificate, error) {
 			return fail(errors.New("tls: private key type does not match public key type"))
 		}
 		if !bytes.Equal(priv.Public().(ed25519.PublicKey), pub) {
+			return fail(errors.New("tls: private key does not match public key"))
+		}
+	case circlSign.PublicKey:
+		priv, ok := cert.PrivateKey.(circlSign.PrivateKey)
+		if !ok {
+			return fail(errors.New("tls: private key type does not match public key type"))
+		}
+		pkBytes, err := priv.Public().(circlSign.PublicKey).MarshalBinary()
+		pkBytes2, err2 := pub.MarshalBinary()
+
+		if err != nil || err2 != nil || !bytes.Equal(pkBytes, pkBytes2) {
 			return fail(errors.New("tls: private key does not match public key"))
 		}
 	default:

@@ -595,6 +595,25 @@ func TestCreateSelfSignedCertificate(t *testing.T) {
 		{"Ed25519", ed25519Pub, ed25519Priv, true, PureEd25519},
 	}
 
+	for _, cs := range circlSchemes {
+		pk, sk, err := cs.scheme.GenerateKey()
+		if err != nil {
+			t.Fatal()
+		}
+		tests = append(tests, struct {
+			name      string
+			pub, priv interface{}
+			checkSig  bool
+			sigAlgo   SignatureAlgorithm
+		}{
+			cs.scheme.Name(),
+			pk,
+			sk,
+			true,
+			cs.sga,
+		})
+	}
+
 	testExtKeyUsage := []ExtKeyUsage{ExtKeyUsageClientAuth, ExtKeyUsageServerAuth}
 	testUnknownExtKeyUsage := []asn1.ObjectIdentifier{[]int{1, 2, 3}, []int{2, 59, 1}}
 	extraExtensionData := []byte("extra extension")
@@ -1191,13 +1210,13 @@ Data:
 	X509v3 extensions:
 		X509v3 Key Usage: critical
 			Digital Signature, Certificate Sign, CRL Sign
-		X509v3 Extended Key Usage: 
+		X509v3 Extended Key Usage:
 			TLS Web Client Authentication, TLS Web Server Authentication, OCSP Signing
 		X509v3 Basic Constraints: critical
 			CA:TRUE
-		X509v3 Subject Key Identifier: 
+		X509v3 Subject Key Identifier:
 			B7:17:DA:16:EA:C5:ED:1F:18:49:44:D3:D2:E3:A0:35:0A:81:93:60
-		X509v3 Authority Key Identifier: 
+		X509v3 Authority Key Identifier:
 			keyid:B7:17:DA:16:EA:C5:ED:1F:18:49:44:D3:D2:E3:A0:35:0A:81:93:60
 
 Signature Algorithm: ED25519
