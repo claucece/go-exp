@@ -41,6 +41,8 @@ print("Removing templates (for now)  ...")
 subprocess.check_call(['rm', '-r',
     os.path.join(circl, 'sign/dilithium/templates'),
     os.path.join(circl, 'sign/dilithium/gen.go'),
+    os.path.join(circl, 'group/ristretto255.go'),
+    os.path.join(circl, 'group/ristretto255_test.go'),
 ])
 
 print("Removing misc cruft ...")
